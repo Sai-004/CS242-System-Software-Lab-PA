@@ -1,0 +1,30 @@
+#!/bin/bash
+#Q1. Bash script for backing up files
+
+#Reading arguments
+Filename=$1					#filename holding the list of the files to be backed up 
+Backup_Dir=$2				#directory where the backup files are to be stored.
+
+#Validation and Testing of the script
+if [ "$#" != "2" ]; then										#checking the no.of arguments entered
+	echo "You have entered $# arguments"
+	echo "Please enter exactly 2 arguments"
+elif [ ! -f $Filename ]; then									#checking if the entered filename exists 
+	echo "Entered file \"$Filename\" doesn't exist"
+elif [ ! -d $Backup_Dir ] && [ ! -f $Backup_Dir ]; then			#checking if the entered directory exists
+	echo "Entered directory \"$Backup_Dir\" doesn't exist"
+elif [ ! -d $Backup_Dir ] && [ -f $Backup_Dir ]; then
+	echo "\"$Backup_Dir\" is not a Directory, it's a file"
+	echo "Please enter a Directory to store the backup files"
+fi
+
+#Backing up files after passing the validation check
+if [ "$#" == "2" ] && [ -f $Filename ] && [ -d $Backup_Dir ]; then
+	
+	while read file_name;										#reading the file names to be backed up
+	do
+		backup_filename=$file_name.bak							#creating name of backup files and adding the extension '.bak'
+		touch $Backup_Dir/$backup_filename						#creating the backup file in the Backup Directory
+		cp $file_name $Backup_Dir/$backup_filename				#copying the file contents of original file to the backed up file
+	done < $1
+fi
